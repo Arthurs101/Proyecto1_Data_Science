@@ -63,6 +63,12 @@ df['DIRECCION'] = df['DIRECCION'].str.normalize('NFKD').str.encode('ascii', erro
 print("Limpieza de DIRECCION completada:")
 print(df['DIRECCION'].head())
 
+# Remover columnas inecesarias
+'''
+Remover columna NIVEL
+'''
+df.drop(columns=['NIVEL'], inplace=True, axis=1)
+
 # Remover filas completamente vacías (por si quedaron después de la limpieza)
 '''
 Remover filas completamente vacías
