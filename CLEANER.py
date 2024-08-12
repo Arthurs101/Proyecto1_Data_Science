@@ -76,13 +76,12 @@ df['DIRECTOR'] = df['DIRECTOR'].str.upper().fillna('NO CONOCIDO')
 print("Limpieza de SUPERVISOR y DIRECTOR completada:")
 print(df[['SUPERVISOR', 'DIRECTOR']].head())
 
-# Remover filas duplicadas
+# Llenar valores nulos en las columnas DISTRITO y DIRECCION
 '''
-Remover filas duplicadas en base a todas las columnas.
+Reemplazar valores nulos en DISTRITO y DIRECCION por "NO DISPONIBLE"
 '''
-df.drop_duplicates(inplace=True)
-print("Remoción de duplicados completada.")
-print(f"Total de filas después de remover duplicados: {len(df)}")
+df['DISTRITO'] = df['DISTRITO'].fillna('NO DISPONIBLE')
+df['DIRECCION'] = df['DIRECCION'].fillna('NO DISPONIBLE')
 
 # Remover columnas innecesarias
 '''
