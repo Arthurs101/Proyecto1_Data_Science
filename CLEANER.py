@@ -30,8 +30,10 @@ print(df['CODIGO'].head())
 
 # Limpiar los números telefónicos
 df['TELEFONO'] = df['TELEFONO'].str.replace('-', '').str.strip()
+df['TELEFONO ADICIONAL'] = np.where(df['TELEFONO'].str.len() >= 16,  df['TELEFONO'].str[8:15], np.nan) #en caso que sean 2 numeros juntos
+df['TELEFONO'] = np.where(df['TELEFONO'].str.len() >= 16,  df['TELEFONO'].str[0:7], df['TELEFONO']) #en caso que sean 2 numeros juntos
 df['TELEFONO'] = np.where(df['TELEFONO'].str.len() == 8, df['TELEFONO'], np.nan) #SOLO MANTENER LOS CORRECTOS
-df['TELEFONO ADICIONAL'] = np.where(df['TELEFONO'].str.len() > 8, df['TELEFONO'], np.nan) #SOLO MANTENER LOS CORRECTOS
+
 print("Limpieza de TELEFONO completada:")
 print(df[['TELEFONO']].head())
 
