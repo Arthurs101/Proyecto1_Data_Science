@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+import unicodedata
 
 # Combinar todos los archivos CSV en un único DataFrame
 df = pd.DataFrame()
@@ -17,7 +18,7 @@ for raw_department in os.listdir('./RAW_FILES'):
 # Concatenar todos los DataFrames en uno solo
 df = pd.concat(raw_dfs, ignore_index=True)
 
-# Remover filas que contienen valores no válidos o basura
+# Remover filas que contienen valores no válidos o basura de alerta y de indexado de páginas
 regex = r"([0-9]+( )*Establecimientos encontrados|alert\('.*'\))"
 unvalid = df['CODIGO'].str.contains(regex).astype(bool)
 df = df.loc[~unvalid]
@@ -29,10 +30,10 @@ print(df['CODIGO'].head())
 
 # Limpiar los números telefónicos
 df['TELEFONO'] = df['TELEFONO'].str.replace('-', '').str.strip()
-df['Numero Adicional'] = np.where(df['TELEFONO'].str.len() < 8, df['TELEFONO'], np.nan)
-df['TELEFONO'] = np.where(df['TELEFONO'].str.len() >= 8, df['TELEFONO'], np.nan)
+df['TELEFONO'] = np.where(df['TELEFONO'].str.len() == 8, df['TELEFONO'], np.nan) #SOLO MANTENER LOS CORRECTOS
+df['TELEFONO ADICIONAL'] = np.where(df['TELEFONO'].str.len() > 8, df['TELEFONO'], np.nan) #SOLO MANTENER LOS CORRECTOS
 print("Limpieza de TELEFONO completada:")
-print(df[['TELEFONO', 'Numero Adicional']].head())
+print(df[['TELEFONO']].head())
 
 # Limpiar los valores de nombres de establecimientos y mantener el original
 df['ESTABLECIMIENTO ORIGINAL'] = df['ESTABLECIMIENTO']
@@ -54,10 +55,27 @@ df['DIRECTOR'] = df['DIRECTOR'].str.upper().fillna(np.nan)
 print("Limpieza de SUPERVISOR y DIRECTOR completada:")
 print(df[['SUPERVISOR', 'DIRECTOR']].head())
 
-# Remover filas duplicadas basadas en la columna ESTABLECIMIENTO
-df = df.drop_duplicates(subset=['ESTABLECIMIENTO'], keep=False)
+# Remover filas duplicadas identicas
+df = df.drop_duplicates()
 print("Duplicados eliminados:")
 print(df.shape)
+
+#remover carácteres especiales usando unicode
+# Función para remover acentos y caracteres especiales
+def remove_accents(input_str):
+    try:
+        normalized_str = unicodedata.normalize('NFD', input_str)
+        filtered_str = ''.join([c for c in normalized_str if unicodedata.category(c) != 'Mn'])
+        return unicodedata.normalize('NFC', filtered_str)
+    except Exception as e: #in case a non string column was read
+        return input_str
+
+
+'''
+Limpieza de caracteres especiales usando unicode para remover cualquier tipo de accento
+'''
+string_columns = df.select_dtypes(include=['object']).columns
+df = df[string_columns].applymap(remove_accents)
 
 # Remover filas completamente vacías (por si quedaron después de la limpieza)
 df.dropna(how="all", inplace=True)
