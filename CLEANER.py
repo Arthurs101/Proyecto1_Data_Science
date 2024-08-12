@@ -76,6 +76,14 @@ df['DIRECTOR'] = df['DIRECTOR'].str.upper().fillna('NO CONOCIDO')
 print("Limpieza de SUPERVISOR y DIRECTOR completada:")
 print(df[['SUPERVISOR', 'DIRECTOR']].head())
 
+# Remover filas duplicadas
+'''
+Remover filas duplicadas en base a todas las columnas.
+'''
+df.drop_duplicates(inplace=True)
+print("Remoción de duplicados completada.")
+print(f"Total de filas después de remover duplicados: {len(df)}")
+
 # Remover columnas innecesarias
 '''
 Remover columna NIVEL ya que solo contiene un valor y no es necesaria.
