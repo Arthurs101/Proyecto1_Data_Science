@@ -7,4 +7,4 @@
 - Gabriel García - 21352
 - Dariel Villatoro - 20776
 
-<a href="[DOCUMENTO](https://github.com/Arthurs101/Proyecto1_Data_Science/blob/main/Proyecto%201%20Data%20Science.pdf)" target="_blank">DOCUMENTO</a>
+<a href="https://github.com/Arthurs101/Proyecto1_Data_Science/blob/main/Proyecto%201%20Data%20Science.pdf" target="_blank">DOCUMENTO</a>
